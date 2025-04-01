@@ -1,0 +1,36 @@
+server:
+  port: 8090
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  ai:
+    mcp:
+      client:
+        stdio:
+          servers-configuration: classpath:/config/mcp-servers-config.json
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: my-deepseek-R1-14b
+      embedding:
+        model: lrs33/bce-embedding-base_v1:latest
+        options:
+          model: lrs33/bce-embedding-base_v1:latest
+    vectorstore:
+      milvus:
+        client:
+          host: localhost
+          port: 19530
+          username: root
+          password: Milvus
+        databaseName: default
+        collectionName: vector_store
+        embeddingDimension: 768
+        indexType: IVF_FLAT
+        metricType: COSINE
+        initialize-schema: true
+        auto-id: true
+        id-field-name: doc_id
