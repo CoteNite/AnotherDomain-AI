@@ -1,6 +1,7 @@
 package cn.cotenite.ai.controller
 
-import org.springframework.ai.chat.messages.Message
+import cn.cotenite.ai.commons.constants.TextConstants
+import cn.cotenite.ai.commons.response.Response
 import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.prompt.Prompt
@@ -26,21 +27,14 @@ class ChatController(
     private val vectorStore: MilvusVectorStore
 ){
 
-    companion object{
-        val SYSTEM_PROMPT = """
-            Use the information from the DOCUMENTS section to provide accurate answers but act as if you knew this information innately.
-            If unsure, simply state that you don't know.
-            Another thing you need to note is that your reply must be in Chinese!
-            DOCUMENTS:
-                {documents}
-            """.trimIndent()
+    @GetMapping("/generate")
+    fun generate(@RequestParam message:String):Response{
+        val callResponse = chatModel.call(Prompt(message))
+        return Response.success(callResponse)
     }
 
-    @GetMapping("/generate")
-    fun generate(@RequestParam message:String): ChatResponse? = chatModel.call(Prompt(message))
-
     @GetMapping("/ragGenerate")
-    fun ragGenerate(@RequestParam model:String, @RequestParam ragTag:String, @RequestParam message:String): ChatResponse? {
+    fun ragGenerate(@RequestParam model:String, @RequestParam ragTag:String, @RequestParam message:String): Response {
 
         val request = SearchRequest.builder()
             .query(message)
@@ -52,10 +46,10 @@ class ChatController(
 
         val documentCollectors  = documents.map { it.text }.joinToString("")
 
-        val ragMessage = SystemPromptTemplate(SYSTEM_PROMPT).createMessage(mapOf("documents" to documentCollectors))
+        val ragMessage = SystemPromptTemplate(TextConstants.RAG_CONTEXT_PROMPT).createMessage(mapOf("documents" to documentCollectors))
 
         val messages = listOf(UserMessage(message),ragMessage)
 
-        return chatModel.call(Prompt(messages))
+        return Response.success(chatModel.call(Prompt(messages)))
     }
 }

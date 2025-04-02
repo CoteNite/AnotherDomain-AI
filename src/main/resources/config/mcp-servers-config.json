@@ -1,12 +1,20 @@
 {
   "mcpServers": {
     "filesystem": {
-      "command": "npx",
+      "command": "E:/nvm/v16.20.2/npx.cmd",
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "D:\\workspace\\study-demo\\Another-Domain-AI\\src\\main\\resources\\test",
-        "D:\\workspace\\study-demo\\Another-Domain-AI\\src\\main\\resources\\test"
+        "D:/workspace/study-demo/Another-Domain-AI/src/main/resources/mcp/index",
+        "D:/workspace/study-demo/Another-Domain-AI/src/main/resources/mcp/index"
+      ]
+    },
+    "mcp-server-computer": {
+      "command": "java",
+      "args": [
+        "-D spring.ai.mcp.server.stdio=true",
+        "-jar",
+        "D:/workspace/study-demo/Another-Domain-AI/src/main/resources/mcp/app/mcp-server-computer-1.0.0.jar"
       ]
     }
   }

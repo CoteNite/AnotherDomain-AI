@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets
  */
 @Configuration
 class WebConfig:WebMvcConfigurer {
-
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
         converters.removeIf { c: HttpMessageConverter<*>? -> c is StringHttpMessageConverter }
         val converter = StringHttpMessageConverter(StandardCharsets.UTF_8)

@@ -1,6 +1,11 @@
 server:
   port: 8090
 
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    reactor.core: TRACE
+
 spring:
   data:
     redis:
@@ -11,6 +16,12 @@ spring:
       client:
         stdio:
           servers-configuration: classpath:/config/mcp-servers-config.json
+    openai:
+      api-key: ${api.sk}
+      base-url: ${api.uri}
+      chat:
+        options:
+          model: gpt-4o-mini
     ollama:
       base-url: http://localhost:11434
       chat:

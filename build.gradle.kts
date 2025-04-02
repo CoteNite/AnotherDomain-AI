@@ -25,13 +25,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.ai:spring-ai-ollama-spring-boot-starter:1.0.0-M6")
+    implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-tika-document-reader:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-milvus-store-spring-boot-starter:1.0.0-M6")
-
-    implementation("org.redisson:redisson-spring-boot-starter:3.44.0")
-
     implementation("org.springframework.ai:spring-ai-mcp-server-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-mcp-client-webflux-spring-boot-starter:1.0.0-M6")
+
+    implementation("org.redisson:redisson-spring-boot-starter:3.44.0")
 
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r")
 

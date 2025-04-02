@@ -1,14 +1,12 @@
 package cn.cotenite.ai.controller
 
-import cn.cotenite.ai.utils.Slf4j
-import cn.cotenite.ai.utils.Slf4j.Companion.log
-import cn.hutool.core.io.FileUtil
+import cn.cotenite.ai.commons.aop.Slf4j
+import cn.cotenite.ai.commons.aop.Slf4j.Companion.log
 import org.apache.commons.io.FileUtils
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.redisson.api.RList
 import org.redisson.api.RedissonClient
-import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.reader.tika.TikaDocumentReader
 import org.springframework.ai.transformer.splitter.TokenTextSplitter
