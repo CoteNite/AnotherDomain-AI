@@ -16,6 +16,10 @@ data class Response(
             return Response(200,"success",data)
         }
 
+        fun success():Response{
+            return Response(200,"success",null)
+        }
+
         fun error(message:String):Response{
             return Response(500,message,null)
         }

@@ -7,6 +7,9 @@ logging:
     reactor.core: TRACE
 
 spring:
+  cassandra:
+    contact-points: 127.0.0.1:9042
+    local-datacenter: datacenter1
   data:
     redis:
       host: localhost
@@ -37,7 +40,7 @@ spring:
           port: 19530
           username: root
           password: Milvus
-        databaseName: default
+        databaseName: another_domain
         collectionName: vector_store
         embeddingDimension: 768
         indexType: IVF_FLAT
@@ -45,3 +48,8 @@ spring:
         initialize-schema: true
         auto-id: true
         id-field-name: doc_id
+    chat:
+      memory:
+        cassandra:
+          table: chat_history
+          keyspace: another_domain_ai

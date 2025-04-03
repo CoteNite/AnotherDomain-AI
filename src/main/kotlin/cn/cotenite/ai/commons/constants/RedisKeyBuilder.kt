@@ -5,11 +5,11 @@ package cn.cotenite.ai.commons.constants
  * @Description
  * @Date  2025/4/2 21:45
  */
-object RedisKeyCreator {
+object RedisKeyBuilder {
 
-    val PREFIX="AnotherDomain:Ai:"
+    private const val PREFIX="AnotherDomain:Ai:"
 
-    fun getRagTagKey():String{
+    fun buildRagTagListKey():String{
         return "${PREFIX}ragTag"
     }
 

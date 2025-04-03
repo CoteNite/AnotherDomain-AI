@@ -30,6 +30,8 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-milvus-store-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-mcp-server-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-mcp-client-webflux-spring-boot-starter:1.0.0-M6")
+    implementation("org.springframework.ai:spring-ai-cassandra-store-spring-boot-starter:1.0.0-M6")
+
 
     implementation("org.redisson:redisson-spring-boot-starter:3.44.0")
 
@@ -40,6 +42,7 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.testcontainers:cassandra")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
