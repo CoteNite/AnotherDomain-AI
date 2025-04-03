@@ -6,14 +6,11 @@ logging:
     org.springframework.ai: DEBUG
     reactor.core: TRACE
 
+
 spring:
   cassandra:
     contact-points: 127.0.0.1:9042
     local-datacenter: datacenter1
-  data:
-    redis:
-      host: localhost
-      port: 6379
   ai:
     mcp:
       client:

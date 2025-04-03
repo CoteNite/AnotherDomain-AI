@@ -37,7 +37,6 @@ class RagCommandImpl(
 ):RagCommand{
 
     override fun upload(ragTag: String, files: List<MultipartFile>) {
-
         files.forEach {
             try {
                 vectorStoreRepository.insertFileWithTag(ragTag,it)

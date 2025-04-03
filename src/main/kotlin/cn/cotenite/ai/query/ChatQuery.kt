@@ -35,7 +35,7 @@ class ChatQueryImpl(
     private val vectorRepository: VectorStoreRepository
 ):ChatQuery{
 
-        override fun generate(message:String, sessionId:String):String{
+    override fun generate(message:String, sessionId:String):String{
             val content = this.chat(sessionId, message)
             return content
     }
