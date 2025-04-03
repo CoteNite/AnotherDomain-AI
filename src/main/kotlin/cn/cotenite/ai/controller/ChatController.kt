@@ -21,27 +21,13 @@ class ChatController(
 
     @GetMapping("/generate")
     fun generate(@RequestParam message:String,@RequestParam sessionId:String):Response{
-        val content = chatQuery.generate(message, sessionId)
+        val content = chatQuery.generate(sessionId,message)
         return Response.success(content)
     }
 
     @GetMapping("/ragGenerate")
-    fun ragGenerate(@RequestParam model:String, @RequestParam ragTag:String, @RequestParam message:String): Response {
-
-//        val request = SearchRequest.builder()
-//            .query(message)
-//            .topK(5)
-//            .filterExpression("knowledge == '${ragTag}'")
-//            .build()
-//
-//        val documents = vectorStore.similaritySearch(request)?:throw Exception("No documents found")
-//
-//        val documentCollectors  = documents.map { it.text }.joinToString("")
-//
-//        val ragMessage = SystemPromptTemplate(TextConstants.RAG_CONTEXT_PROMPT).createMessage(mapOf("documents" to documentCollectors))
-//
-//        val messages = listOf(UserMessage(message),ragMessage)
-
-        return Response.success()
+    fun ragGenerate(@RequestParam sessionId: String, @RequestParam ragTag:String, @RequestParam message:String): Response {
+        val content = chatQuery.ragGenerate(sessionId,message,ragTag)
+        return Response.success(content)
     }
 }

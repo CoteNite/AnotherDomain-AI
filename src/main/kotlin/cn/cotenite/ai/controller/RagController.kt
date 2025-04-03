@@ -14,7 +14,9 @@ import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.reader.tika.TikaDocumentReader
 import org.springframework.ai.transformer.splitter.TokenTextSplitter
 import org.springframework.ai.vectorstore.milvus.MilvusVectorStore
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.io.PathResource
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
@@ -33,7 +35,8 @@ import java.nio.file.attribute.BasicFileAttributes
 @RequestMapping("/rag")
 class RagController(
     private val ragQuery: RagQuery,
-    private val ragCommand: RagCommand
+    private val ragCommand: RagCommand,
+    @Qualifier("taskExecutor") private val taskExecutor: ThreadPoolTaskExecutor
 ){
 
     @GetMapping("ragList")
@@ -50,7 +53,9 @@ class RagController(
 
     @PostMapping("/uploadRepository")
     fun uploadRepository(@RequestParam repoUrl:String, @RequestParam userName:String, @RequestParam token:String): Response {
-        ragCommand.uploadRepository(repoUrl,userName,token)
+        taskExecutor.submit{
+            ragCommand.uploadRepository(repoUrl,userName,token)
+        }
         return Response.success()
     }
 

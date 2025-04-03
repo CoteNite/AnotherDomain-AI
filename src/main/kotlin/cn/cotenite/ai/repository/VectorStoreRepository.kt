@@ -5,6 +5,7 @@ import cn.cotenite.ai.commons.exception.BusinessException
 import org.springframework.ai.document.Document
 import org.springframework.ai.reader.tika.TikaDocumentReader
 import org.springframework.ai.transformer.splitter.TokenTextSplitter
+import org.springframework.ai.vectorstore.SearchRequest
 import org.springframework.ai.vectorstore.milvus.MilvusVectorStore
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.io.PathResource
@@ -47,6 +48,11 @@ class VectorStoreRepository(
             doc.metadata["knowledge"] = ragTag
         }
         return documentsSplitterList
+    }
+
+    fun similaritySearch(request: SearchRequest): String {
+        val documents = milvusVectorStore.similaritySearch(request)?:throw BusinessException(Errors.FILE_ERROR)
+        return documents.map { it.text }.joinToString("")
     }
 
 }

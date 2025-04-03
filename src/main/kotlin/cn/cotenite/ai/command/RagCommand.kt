@@ -2,17 +2,14 @@ package cn.cotenite.ai.command
 
 import cn.cotenite.ai.commons.aop.Slf4j.Companion.log
 import cn.cotenite.ai.commons.constants.RedisKeyBuilder
-import cn.cotenite.ai.commons.enums.Errors
-import cn.cotenite.ai.commons.exception.BusinessException
 import cn.cotenite.ai.commons.utils.GitUtil
 import cn.cotenite.ai.repository.RedisRepository
 import cn.cotenite.ai.repository.VectorStoreRepository
 import org.apache.commons.io.FileUtils
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
+import org.springframework.ai.document.Document
 import org.springframework.ai.reader.tika.TikaDocumentReader
-import org.springframework.ai.transformer.splitter.TokenTextSplitter
-import org.springframework.ai.vectorstore.milvus.MilvusVectorStore
 import org.springframework.core.io.PathResource
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -20,6 +17,8 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
+import java.util.function.Consumer
+
 
 /**
  * @Author  RichardYoung
@@ -64,15 +63,26 @@ class RagCommandImpl(
             .setCredentialsProvider(UsernamePasswordCredentialsProvider(userName, token))
             .call()
 
-        File(localPath).walk()
-            .onEach { file ->
-                log.info("${repoProjectName}遍历解析路径，上传知识库: ${file.name}")
-                runCatching {
-                    vectorStoreRepository.insertFileWithTag(repoProjectName, file.toPath())
-                }.onFailure {
-                    log.error("遍历解析路径，上传知识库失败: ${file.name}", it)
+
+
+        Files.walkFileTree(Paths.get(localPath), object : SimpleFileVisitor<Path>(){
+            @Throws(IOException::class)
+            override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+                log.info("{} 遍历解析路径，上传知识库:{}", repoProjectName, file.fileName)
+                try {
+                    vectorStoreRepository.insertFileWithTag(repoProjectName, file)
+                } catch (e: Exception) {
+                    log.error("遍历解析路径，上传知识库失败:{}", file.fileName)
                 }
+
+                return FileVisitResult.CONTINUE
             }
+
+            override fun visitFileFailed(file: Path, exc: IOException): FileVisitResult {
+                log.info("Failed to access file: {} - {}", file.toString(), exc.message)
+                return FileVisitResult.CONTINUE
+            }
+        })
 
         git.repository.close()
         git.close()
