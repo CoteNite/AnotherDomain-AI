@@ -8,6 +8,11 @@ logging:
 
 
 spring:
+  neo4j:
+    authentication:
+      username: neo4j
+      password: 12345678
+    uri: bolt://localhost:7687
   cassandra:
     contact-points: 127.0.0.1:9042
     local-datacenter: datacenter1

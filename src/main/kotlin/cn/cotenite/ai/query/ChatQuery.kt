@@ -1,19 +1,16 @@
 package cn.cotenite.ai.query
 
-import cn.cotenite.ai.commons.constants.RedisKeyBuilder
 import cn.cotenite.ai.commons.constants.TextConstants
 import cn.cotenite.ai.commons.enums.Errors
 import cn.cotenite.ai.commons.exception.BusinessException
-import cn.cotenite.ai.repository.VectorStoreRepository
+import cn.cotenite.ai.repository.KnowledgeStoreRepository
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor
 import org.springframework.ai.chat.memory.cassandra.CassandraChatMemory
 import org.springframework.ai.chat.messages.Message
-import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.prompt.Prompt
 import org.springframework.ai.chat.prompt.SystemPromptTemplate
 import org.springframework.ai.ollama.OllamaChatModel
-import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.ai.vectorstore.SearchRequest
 import org.springframework.stereotype.Service
 
@@ -32,7 +29,7 @@ interface ChatQuery{
 class ChatQueryImpl(
     private val chatModel: OllamaChatModel,
     private val chatMemory: CassandraChatMemory,
-    private val vectorRepository: VectorStoreRepository
+    private val vectorRepository: KnowledgeStoreRepository
 ):ChatQuery{
 
     override fun generate(message:String, sessionId:String):String{

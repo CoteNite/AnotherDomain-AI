@@ -15,9 +15,7 @@
 
 聊天记忆：Cassandra
 
-图数据库：Neo4j
-
-Rag: Milvus
+Rag: Milvus+Neo4j
 
 
 
