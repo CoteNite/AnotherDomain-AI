@@ -22,8 +22,5 @@ object JavaParserUtil {
         val parserConfiguration = ParserConfiguration().setSymbolResolver(JavaSymbolSolver(combinedTypeSolver))
         return JavaParser(parserConfiguration)
     }
-//
-//    fun parse(projectPath: String,path: Path?): ParseResult<CompilationUnit> {
-//        return this.getJavaParser(projectPath).parse(path)
-//    }
+
 }

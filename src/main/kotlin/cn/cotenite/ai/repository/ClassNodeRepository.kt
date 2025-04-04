@@ -8,4 +8,6 @@ import org.springframework.data.neo4j.repository.Neo4jRepository
  * @Description
  * @Date  2025/4/4 19:24
  */
-interface ClassNodeRepository : Neo4jRepository<ClassNode, String>
+interface ClassNodeRepository : Neo4jRepository<ClassNode, String> {
+    fun findByName(name: String): MutableList<ClassNode>?
+}

@@ -35,6 +35,7 @@ import javax.xml.transform.stream.StreamResult
 @Slf4j
 class CodeGraphBuilder(
     private val projectPath: Path,
+    private val ragTag: String,
     private val javaParser:JavaParser
 ){
 
@@ -97,6 +98,7 @@ class CodeGraphBuilder(
                     id = methodId,
                     name = methodDeclaration.nameAsString,
                     content = content?:"",
+                    ragTag = ragTag,
                     comment = methodDeclaration.comment.map(Comment::getContent).orElse("")
                 )
                 methodNodeMap[methodNode.id] = methodNode
@@ -152,6 +154,7 @@ class CodeGraphBuilder(
                 val classNode=ClassNode(
                     id = qualifiedClasName ,
                     name = declaration.nameAsString,
+                    ragTag = ragTag,
                     content = declaration.toString()
                 )
                 classNodeMap[qualifiedClasName ] = classNode

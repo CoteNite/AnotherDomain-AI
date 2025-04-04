@@ -65,9 +65,9 @@ class KnowledgeStoreRepository(
         return documentsSplitterList
     }
 
-    fun similaritySearch(request: SearchRequest): String {
+    fun similaritySearch(request: SearchRequest): List<Document> {
         val documents = milvusVectorStore.similaritySearch(request)?:throw BusinessException(Errors.FILE_ERROR)
-        return documents.map { it.text }.joinToString("")
+        return documents
     }
 
 }

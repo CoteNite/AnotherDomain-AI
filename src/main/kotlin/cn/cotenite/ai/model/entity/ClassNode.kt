@@ -15,6 +15,7 @@ class ClassNode(
     val id:String,
     val name:String,
     val content:String,
+    val ragTag: String,
 
     @Relationship(direction = Relationship.Direction.OUTGOING, type = "OWNS")
     var ownMethodNodes:MutableList<MethodNode>?,
@@ -22,8 +23,5 @@ class ClassNode(
     @Relationship(direction = Relationship.Direction.OUTGOING, type = "IMPORTS")
     var importNodes:MutableList<ClassNode>?
 ){
-
-
-
-    constructor(id:String,content:String,name:String):this(id,name,content, mutableListOf(), mutableListOf())
+    constructor(id:String,content:String,name:String,ragTag: String):this(id,name,content,ragTag, mutableListOf(), mutableListOf())
 }

@@ -26,8 +26,10 @@ class ChatController(
     }
 
     @GetMapping("/ragGenerate")
-    fun ragGenerate(@RequestParam sessionId: String, @RequestParam ragTag:String, @RequestParam message:String): Response {
-        val content = chatQuery.ragGenerate(sessionId,message,ragTag)
+    fun ragGenerate(@RequestParam sessionId: String, @RequestParam ragTag:String, @RequestParam message:String,@RequestParam javaRepo:Boolean): Response {
+        val content = chatQuery.ragGenerate(sessionId,message,ragTag,javaRepo)
         return Response.success(content)
     }
+
+
 }

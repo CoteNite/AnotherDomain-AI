@@ -3,6 +3,7 @@ package cn.cotenite.ai.query
 import cn.cotenite.ai.commons.constants.TextConstants
 import cn.cotenite.ai.commons.enums.Errors
 import cn.cotenite.ai.commons.exception.BusinessException
+import cn.cotenite.ai.graph.CodeGraphService
 import cn.cotenite.ai.repository.KnowledgeStoreRepository
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor
@@ -11,6 +12,7 @@ import org.springframework.ai.chat.messages.Message
 import org.springframework.ai.chat.prompt.Prompt
 import org.springframework.ai.chat.prompt.SystemPromptTemplate
 import org.springframework.ai.ollama.OllamaChatModel
+import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.ai.vectorstore.SearchRequest
 import org.springframework.stereotype.Service
 
@@ -22,37 +24,40 @@ import org.springframework.stereotype.Service
 interface ChatQuery{
     fun generate(sessionId:String,message:String): String
 
-    fun ragGenerate(sessionId: String,message: String, ragTag: String): String
+    fun ragGenerate(sessionId: String,message: String, ragTag: String,javaRepo: Boolean): String
 }
 
 @Service
 class ChatQueryImpl(
-    private val chatModel: OllamaChatModel,
+    private val chatModel: OpenAiChatModel,
     private val chatMemory: CassandraChatMemory,
-    private val vectorRepository: KnowledgeStoreRepository
+    private val vectorRepository: KnowledgeStoreRepository,
+    private val codeGraphService: CodeGraphService
 ):ChatQuery{
 
-    override fun generate(message:String, sessionId:String):String{
+    override fun generate(sessionId:String,message:String):String{
             val content = this.chat(sessionId, message)
             return content
     }
 
-    override fun ragGenerate(sessionId: String,message: String, ragTag: String):String{
-
+    override fun ragGenerate(sessionId: String,message: String, ragTag: String,javaRepo: Boolean):String{
         val request = SearchRequest.builder()
             .query(message)
-            .topK(5)
+            .topK(20)
             .filterExpression("knowledge == '${ragTag}'")
             .build()
 
-        val documents = vectorRepository.similaritySearch(request)
+        var documents = vectorRepository.similaritySearch(request)
+
+        if (javaRepo){
+            documents = codeGraphService.enhanceWithGraphInfo(documents)
+        }
+
         val ragMessage = SystemPromptTemplate(TextConstants.RAG_CONTEXT_PROMPT).createMessage(mapOf("documents" to documents))
 
         val content = this.ragChat(sessionId, message,ragMessage)
         return content
     }
-
-
 
 
     private fun chat(sessionId: String,message: String):String{

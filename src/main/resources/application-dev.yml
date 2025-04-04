@@ -21,6 +21,7 @@ spring:
       client:
         stdio:
           servers-configuration: classpath:/config/mcp-servers-config.json
+          timeout: 100000
     openai:
       api-key: ${api.sk}
       base-url: ${api.uri}
@@ -35,6 +36,8 @@ spring:
         model: lrs33/bce-embedding-base_v1:latest
         options:
           model: lrs33/bce-embedding-base_v1:latest
+          num-batch: 512
+          num-ctx: 512
     vectorstore:
       milvus:
         client:
@@ -44,7 +47,7 @@ spring:
           password: Milvus
         databaseName: another_domain
         collectionName: vector_store
-        embeddingDimension: 768
+        embeddingDimension: 10240000
         indexType: IVF_FLAT
         metricType: COSINE
         initialize-schema: true

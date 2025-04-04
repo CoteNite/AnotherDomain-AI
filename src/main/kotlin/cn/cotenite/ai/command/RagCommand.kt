@@ -34,7 +34,7 @@ import kotlin.io.path.pathString
  */
 interface RagCommand {
     fun upload(ragTag:String,files: List<MultipartFile>)
-    fun uploadRepository(repoUrl:String,userName:String,token:String)
+    fun uploadRepository(repoUrl:String,userName:String,token:String,javaRepo:Boolean)
 }
 
 @Slf4j
@@ -43,8 +43,7 @@ class RagCommandImpl(
     private val redisRepository: RedisRepository,
     private val knowledgeStoreRepository: KnowledgeStoreRepository,
     private val methodNodeRepository: MethodNodeRepository,
-    private val classNodeRepository: ClassNodeRepository,
-    @Qualifier("taskExecutor") private val taskExecutor: ThreadPoolTaskExecutor
+    private val classNodeRepository: ClassNodeRepository
 ):RagCommand{
 
     override fun upload(ragTag: String, files: List<MultipartFile>) {
@@ -59,7 +58,7 @@ class RagCommandImpl(
 
     }
 
-    override fun uploadRepository(repoUrl: String, userName: String, token: String) {
+    override fun uploadRepository(repoUrl: String, userName: String, token: String,javaRepo: Boolean) {
         val localPath = "./git-cloned-repo"
         val repoProjectName = GitUtil.extractProjectName(repoUrl)
 
@@ -73,7 +72,9 @@ class RagCommandImpl(
             .setCredentialsProvider(UsernamePasswordCredentialsProvider(userName, token))
             .call()
 
-//        buildGraph(localPath)
+        if (javaRepo){
+            buildGraph(localPath,repoProjectName)
+        }
 
         Files.walkFileTree(Paths.get(localPath), object : SimpleFileVisitor<Path>(){
             @Throws(IOException::class)
@@ -105,11 +106,9 @@ class RagCommandImpl(
         log.info("遍历解析路径，上传完成:${repoUrl}")
     }
 
-    private fun buildGraph(projectPath: String) {
-        methodNodeRepository.deleteAll()
-        classNodeRepository.deleteAll()
+    private fun buildGraph(projectPath: String,ragTag: String) {
 
-        val buildContext = CodeGraphBuilder(Path.of(projectPath), JavaParserUtil.getJavaParser(projectPath)).buildGraph()
+        val buildContext = CodeGraphBuilder(Path.of(projectPath), ragTag ,JavaParserUtil.getJavaParser(projectPath)).buildGraph()
 
         classNodeRepository.saveAll(buildContext.classNodes)
         log.info("类节点保存完毕:${projectPath}")

@@ -16,9 +16,10 @@ class MethodNode(
     val name:String,
     val comment:String,
     val content:String,
-
+    val ragTag: String,
     @Relationship(direction = Relationship.Direction.OUTGOING, type = "USERS")
-    var usesMethodNodes:MutableList<MethodNode>
-){
-    constructor(id:String,name:String,comment:String,content:String):this(id,name,comment,content, mutableListOf())
+    var usesMethodNodes: MutableList<MethodNode>
+) {
+    constructor(id: String, name: String, comment: String, content: String, ragTag: String) :
+            this(id, name, comment, content, ragTag, mutableListOf())
 }
