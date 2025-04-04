@@ -9,12 +9,16 @@ import org.springframework.ai.chat.client.ChatClient
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor
 import org.springframework.ai.chat.memory.cassandra.CassandraChatMemory
 import org.springframework.ai.chat.messages.Message
+import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.prompt.Prompt
 import org.springframework.ai.chat.prompt.SystemPromptTemplate
+import org.springframework.ai.model.Media
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.ai.vectorstore.SearchRequest
 import org.springframework.stereotype.Service
+import org.springframework.util.MimeTypeUtils
+import java.net.URL
 
 /**
  * @Author  RichardYoung
@@ -22,7 +26,7 @@ import org.springframework.stereotype.Service
  * @Date  2025/4/3 01:37
  */
 interface ChatQuery{
-    fun generate(sessionId:String,message:String): String
+    fun generate(sessionId:String,message:String,imageUrl: String?): String
 
     fun ragGenerate(sessionId: String,message: String, ragTag: String,javaRepo: Boolean): String
 }
@@ -35,9 +39,14 @@ class ChatQueryImpl(
     private val codeGraphService: CodeGraphService
 ):ChatQuery{
 
-    override fun generate(sessionId:String,message:String):String{
-            val content = this.chat(sessionId, message)
-            return content
+    override fun generate(sessionId:String,message:String,imageUrl: String?):String{
+        val content:String =
+            if (imageUrl!=null)
+                this.chat(sessionId, message,imageUrl)
+            else
+                this.chat(sessionId, message)
+
+        return content
     }
 
     override fun ragGenerate(sessionId: String,message: String, ragTag: String,javaRepo: Boolean):String{
@@ -65,6 +74,19 @@ class ChatQueryImpl(
         val content = ChatClient.create(chatModel)
             .prompt()
             .advisors(advisor)
+            .user(message)
+            .call()
+            .content()?:throw BusinessException(Errors.CHAT_ERROR)
+        return content
+    }
+
+    private fun chat(sessionId: String,message: String,imageUrl:String?):String{
+        val advisor = MessageChatMemoryAdvisor(chatMemory, sessionId, 10)
+        val userMessage = UserMessage(message, Media(MimeTypeUtils.IMAGE_PNG, URL(imageUrl)))
+        val content = ChatClient.create(chatModel)
+            .prompt()
+            .advisors(advisor)
+            .messages(userMessage)
             .user(message)
             .call()
             .content()?:throw BusinessException(Errors.CHAT_ERROR)

@@ -20,8 +20,8 @@ class ChatController(
 ){
 
     @GetMapping("/generate")
-    fun generate(@RequestParam message:String,@RequestParam sessionId:String):Response{
-        val content = chatQuery.generate(sessionId,message)
+    fun generate(@RequestParam message:String,@RequestParam sessionId:String,@RequestParam(required = false) imageUrl: String?):Response{
+        val content = chatQuery.generate(sessionId,message,imageUrl)
         return Response.success(content)
     }
 

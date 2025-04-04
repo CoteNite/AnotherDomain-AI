@@ -17,6 +17,8 @@ spring:
     contact-points: 127.0.0.1:9042
     local-datacenter: datacenter1
   ai:
+    model:
+      image: openai
     mcp:
       client:
         stdio:
@@ -27,7 +29,12 @@ spring:
       base-url: ${api.uri}
       chat:
         options:
-          model: gpt-4o-mini
+          model: chatgpt-4o-latest
+      image:
+        options:
+          model: dall-e-3
+          response-format: url
+          size: 1024*1024
     ollama:
       base-url: http://localhost:11434
       chat:

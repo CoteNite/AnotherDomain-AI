@@ -28,6 +28,7 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-ollama-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-tika-document-reader:1.0.0-M6")
+
     implementation("org.springframework.ai:spring-ai-milvus-store-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-mcp-server-spring-boot-starter:1.0.0-M6")
     implementation("org.springframework.ai:spring-ai-mcp-client-webflux-spring-boot-starter:1.0.0-M6")
